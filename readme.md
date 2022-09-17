@@ -16,11 +16,11 @@ https://websocketclient.hivemq.cloud/?username=GreyCourtBees&host=88d7c3c9d32f4c
 3. Subscribe to : gc-hive/#
 
 # other info
-##To run code on Raspberry Pi - 
+## To run code on Raspberry Pi - 
 >> cd  <path>
 >> python3 pubsensors.py
 
-##need to install the libraries
+## need to install the libraries
 >> sudo pip3 install bme680
 >> sudo pip3 install paho.mqtt
 
