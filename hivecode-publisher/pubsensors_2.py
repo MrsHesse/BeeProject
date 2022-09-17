@@ -1,34 +1,31 @@
-# Test using HiveMQ Websocket Client
+# import the BME680 library for RPI
+import bme680
 
-## Access the HiveMQ Websocket Client.
-https://websocketclient.hivemq.cloud/?username=GreyCourtBees&host=88d7c3c9d32f4c10aeb6593c796b8654.s1.eu.hivemq.cloud&port=8884
+# import time library for delay purposes
+import time
 
-Host : 88d7c3c9d32f4c10aeb6593c796b8654.s1.eu.hivemq.cloud
-Port : 8884
-username : GreyCourtBees
-password : F1zzBuzz
-SSL : checked
+# import datetime library for timestamp
+from datetime import datetime
 
-Subscribe to : gc-hive/#
+import json
 
-Run code on Raspberry Pi - 
->> cd  /home/pi/Documents/Bees
->> python3 pubsensors.py
-
-need to install the libraries
->> sudo pip3 install bme680
->> sudo pip3 install paho.mqtt
-
-pubsensors.py
+# import paho mqtt libraries to publish sensor data
+import paho.mqtt.client as paho
 from paho import mqtt
 
-# broker details - will need to hide these
+# broker details - for security these are hidden and need to be included for code to work
 mqttbroker = "88d7c3c9d32f4c10aeb6593c796b8654.s1.eu.hivemq.cloud"
 mqttport = 8883
-mqttuser = "GreyCourtBees"
-mqttpwd = "F1zzBuzz"
+mqttuser = "****"
+mqttpwd = "****"
 
-topic = "gc-hive/BME680"
+topic = "gc-hive/data"
+topic_temp = "gc-hive/temperature"
+topic_hum = "gc-hive/humidity"
+topic_pres = "gc-hive/pressure"
+
+# sample time in seconds
+sample_time = 30
 
 # setting callbacks for different events to see if it works, print the message etc.
 def on_connect(client, userdata, flags, rc, properties=None):
@@ -37,11 +34,28 @@ def on_connect(client, userdata, flags, rc, properties=None):
 		raise IOError("Couldn't establish a connection with the MQTT server")
 
 
-def publish_value(client, value):
+def publish_value(client, topic, value):
 	result = client.publish(topic=topic, payload=str(value).encode("UTF-8"), qos=2)
 	print(f"published to {topic} - {value} [{result}]")
 	return result
 
+
+def publish_data(client, temperature, pressure, humidity):
+    print("V", temperature, pressure, humidity)
+    
+    data = { "time"        : datetime.now().isoformat(),
+             "temperature" : temperature,
+             "pressure"    : pressure,
+             "humidity"    : humidity }
+    print("D", data)
+            
+    jsonstr = json.dumps(data)
+    
+    print("J", jsonstr)
+    result = client.publish(topic=topic, payload=jsonstr, qos=2)
+    print("P", f"published to {topic} - {result}")
+    print()
+    return result
 
 # initialise the sensor
 sensor = bme680.BME680()
@@ -58,7 +72,8 @@ sensor.set_filter(bme680.FILTER_SIZE_3)
 # initialise the MQTT client
 
 # create the client
-client = paho.Client(client_id="", userdata=None, protocol=paho.MQTTv5)
+#client = paho.Client(client_id="", userdata=None, protocol=paho.MQTTv5)
+client = paho.Client("p2")
 client.on_connect = on_connect
 
 # enable TLS for secure connection
@@ -81,16 +96,13 @@ while True:
         hum = sensor.data.humidity
         temp = sensor.data.temperature
         
-        data = f"{now} {temp:.2f} {pres:.1f}  {hum:.2f}" 
-        print("data -", data)
-        publish_value(client, data)
+        
+        #publish_value(client, topic, data)
+        publish_data(client, temp, pres, hum)
         
         #if sensor.data.heat_stable:
         #    output += f", {sensor.data.gasresitance} ohms"
         #print(output)
         
-        time.sleep(5)
+        time.sleep(sample_time)
         
-
-
-
