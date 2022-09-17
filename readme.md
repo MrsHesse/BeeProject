@@ -4,11 +4,11 @@
 ## credentials have been removed for security.
 https://websocketclient.hivemq.cloud/?username=GreyCourtBees&host=88d7c3c9d32f4c10aeb6593c796b8654.s1.eu.hivemq.cloud&port=8884
 
-Host : 88d7c3c9d32f4c10aeb6593c796b8654.s1.eu.hivemq.cloud
-Port : 8884
-username : ****
-password : ****
-SSL : checked
+- Host : 88d7c3c9d32f4c10aeb6593c796b8654.s1.eu.hivemq.cloud
+- Port : 8884
+- username : ****
+- password : ****
+- SSL : checked
 
 Subscribe to : gc-hive/#
 
