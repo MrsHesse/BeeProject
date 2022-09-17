@@ -1,4 +1,7 @@
-# Test using HiveMQ Websocket Client
+# Explination of data collection and sharing approach
+[see slides](https://docs.google.com/presentation/d/1-Z-34nL_-e_dLuUNPXYTUxwACRXUNZZtR-lcUro-GA0/edit?usp=sharing)
+
+# To Test using HiveMQ Websocket Client
 
 ## Access the HiveMQ Websocket Client.
 ## credentials have been removed for security.
